@@ -1,18 +1,18 @@
 const express = require('express')
 const app = express();
-const logger = require('./logger')
-const authorize = require('./authorize')
 
-app.use([authorize, logger]);
+const people = require('./routes/people')
+const auth = require('./routes/auth')
 
-app.get('/', logger, (req, res) => {
 
-  res.send('Home')
-})
-app.get('/about', logger, (req, res) => {
-  res.send('About')
-})
+app.use(express.static('./methods-public'));
+//parse forma data
+app.use(express.urlencoded({ extended: false }));
+//parse json
+app.use(express.json());
 
+app.use('/api/people', people)
+app.use('/login', auth)
 
 app.listen(5000, () => {
   console.log('Server is listening on port 5000....')
