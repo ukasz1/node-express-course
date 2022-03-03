@@ -13,6 +13,11 @@ app.get('/hello', (req, res) => {
   res.send('Task Manager App');
 })
 
+app.get('/test/:id', (req, res) => {
+  console.log(req.params)
+  res.send('OKej');
+})
+
 
 app.use('/api/v1/tasks', tasks);
 
