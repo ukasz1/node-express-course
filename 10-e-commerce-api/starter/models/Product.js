@@ -65,12 +65,16 @@ const ProductSchema = new mongoose.Schema({
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-ProductSchema.virtual('reviews', {  //dołącz rewiewsy przy wyświetlaniu produktu (przy braku zależności  tablic)
+ProductSchema.virtual('reviews', {  //add the reviews to the product (there is no reference between tables)
   ref: 'Review',
   localField: '_id',
   foreignField: 'product',
   justOne: false,
-  //match: { rating: 5 }    //tylko reviews z ratingiem 5
+  //match: { rating: 5 }    //only reviews with rating 5
+})
+
+ProductSchema.pre('remove', async function (next) { // deleting reviews also while deleting connected product
+  await this.model('Review').deleteMany({ product: this._id })
 })
 
 module.exports = mongoose.model('Product', ProductSchema)
